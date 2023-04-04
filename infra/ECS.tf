@@ -19,8 +19,8 @@ module "ecs" {
 }
 
 
-resource "aws_ecs_task_definition" "front_end" {
-  family                   = "front_end"
+resource "aws_ecs_task_definition" "projeto" {
+  family                   = "projeto"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 256
@@ -29,7 +29,7 @@ resource "aws_ecs_task_definition" "front_end" {
   container_definitions = jsonencode(
     [
       {
-        "name"      = "producao"
+        "name"      = "front_end"
         "image"     = "570438273045.dkr.ecr.us-west-2.amazonaws.com/producao:v1"
         "cpu"       = 256
         "memory"    = 512
@@ -41,21 +41,35 @@ resource "aws_ecs_task_definition" "front_end" {
           }
         ]
       }
+      ], [
+      {
+        "name"      = "back_end"
+        "image"     = "570438273045.dkr.ecr.us-west-2.amazonaws.com/producao:v1"
+        "cpu"       = 256
+        "memory"    = 512
+        "essential" = true
+        "portMappings" = [
+          {
+            "containerPort" = 4010
+            "hostPort"      = 4010
+          }
+        ]
+      }
     ]
   )
 
 }
 
 
-resource "aws_ecs_service" "front_end" {
-  name            = "front_end"
+resource "aws_ecs_service" "projeto" {
+  name            = "projeto"
   cluster         = module.ecs.cluster_id
-  task_definition = aws_ecs_task_definition.front_end.arn
+  task_definition = aws_ecs_task_definition.projeto.arn
   desired_count   = 1
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.front_end.arn
-    container_name   = "producao"
+    target_group_arn = aws_lb_target_group.projeto.arn
+    container_name   = "projeto"
     container_port   = 3000
   }
 

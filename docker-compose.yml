@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  go:
+    build: # Use the Dockerfile from the current directory to build container.
+      context: ../react-books-backend
+    container_name: go
+    ports: 
+      - "4010:4010"
+  react:
+    build: # Use the Dockerfile from the current directory to build container.
+      context: ../react-books
+    container_name: react
+    ports: 
+      - "3000:3000"

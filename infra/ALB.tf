@@ -1,12 +1,12 @@
-resource "aws_lb" "front_end" {
-  name            = "ECS-React"
+resource "aws_lb" "projeto" {
+  name            = "React-Books"
   security_groups = [aws_security_group.alb.id]
   subnets         = module.vpc.public_subnets
 }
 
 
-resource "aws_lb_target_group" "front_end" {
-  name        = "ECS-React"
+resource "aws_lb_target_group" "projeto" {
+  name        = "React-Books"
   port        = 3000
   protocol    = "HTTP"
   target_type = "ip"
@@ -14,8 +14,8 @@ resource "aws_lb_target_group" "front_end" {
 
 }
 
-resource "aws_lb_listener" "front_end" {
-  load_balancer_arn = aws_lb.front_end.arn
+resource "aws_lb_listener" "projeto" {
+  load_balancer_arn = aws_lb.projeto.arn
   port              = 3000
   protocol          = "HTTP"
   // ssl_policy        = "ELBSecurityPolicy-2016-08"
@@ -24,10 +24,10 @@ resource "aws_lb_listener" "front_end" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.front_end.arn
+    target_group_arn = aws_lb_target_group.projeto.arn
   }
 }
 
 output "IP" {
-  value = aws_lb.front_end.dns_name
+  value = aws_lb.projeto.dns_name
 }
