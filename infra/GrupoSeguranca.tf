@@ -12,6 +12,16 @@ resource "aws_security_group_rule" "entrada_alb" {
   security_group_id = aws_security_group.alb.id
 }
 
+resource "aws_security_group_rule" "entrada_back_alb" {
+  type              = "ingress"
+  from_port         = 4010
+  to_port           = 4010
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.alb.id
+}
+
+
 resource "aws_security_group_rule" "saida_alb" {
   type              = "egress"
   from_port         = 0

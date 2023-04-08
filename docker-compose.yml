@@ -9,7 +9,7 @@ services:
       - "4010:4010"
   react:
     build: # Use the Dockerfile from the current directory to build container.
-      context: ../react-books
+      context: ../React-Books
     container_name: react
     ports: 
       - "3000:3000"

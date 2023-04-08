@@ -26,11 +26,12 @@ resource "aws_ecs_task_definition" "projeto" {
   cpu                      = 256
   memory                   = 512
   execution_role_arn       = aws_iam_role.cargo.arn
+
   container_definitions = jsonencode(
     [
       {
-        "name"      = "front_end"
-        "image"     = "570438273045.dkr.ecr.us-west-2.amazonaws.com/producao:v1"
+        "name"      = "frontend"
+        "image"     = "554559581131.dkr.ecr.us-west-2.amazonaws.com/producao:latest"
         "cpu"       = 256
         "memory"    = 512
         "essential" = true
@@ -41,10 +42,23 @@ resource "aws_ecs_task_definition" "projeto" {
           }
         ]
       }
-      ], [
+      ]
+  )
+
+}
+resource "aws_ecs_task_definition" "projeto-back" {
+  family                   = "projeto-back"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  cpu                      = 256
+  memory                   = 512
+  execution_role_arn       = aws_iam_role.cargo.arn
+
+  container_definitions = jsonencode(
+    [
       {
-        "name"      = "back_end"
-        "image"     = "570438273045.dkr.ecr.us-west-2.amazonaws.com/producao:v1"
+        "name"      = "backend"
+        "image"     = "554559581131.dkr.ecr.us-west-2.amazonaws.com/producao-back:latest"
         "cpu"       = 256
         "memory"    = 512
         "essential" = true
@@ -55,11 +69,10 @@ resource "aws_ecs_task_definition" "projeto" {
           }
         ]
       }
-    ]
+      ]
   )
 
 }
-
 
 resource "aws_ecs_service" "projeto" {
   name            = "projeto"
@@ -69,8 +82,32 @@ resource "aws_ecs_service" "projeto" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.projeto.arn
-    container_name   = "projeto"
+    container_name   = "frontend"
     container_port   = 3000
+  }
+
+  network_configuration {
+    subnets         = module.vpc.private_subnets
+    security_groups = [aws_security_group.privado.id]
+  }
+
+  capacity_provider_strategy {
+    capacity_provider = "FARGATE"
+    weight            = 1
+  }
+
+}
+
+resource "aws_ecs_service" "projeto-back" {
+  name            = "projeto-back"
+  cluster         = module.ecs.cluster_id
+  task_definition = aws_ecs_task_definition.projeto-back.arn
+  desired_count   = 1
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.projeto-back.arn
+    container_name   = "backend"
+    container_port   = 4010
   }
 
   network_configuration {

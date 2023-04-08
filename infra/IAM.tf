@@ -33,6 +33,11 @@ resource "aws_iam_role_policy" "ecs_ecr" {
           "ecr:BatchGetImage",
           "ecr:CreateLogStream",
           "ecr:PutLogEvents",
+          "ecr:BatchGetImage",
+          "ecr:CompleteLayerUpload",
+          "ecr:InitiateLayerUpload",
+          "ecr:PutImage",
+          "ecr:UploadLayerPart"
         ]
         Effect   = "Allow"
         Resource = "*"
