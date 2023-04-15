@@ -1,15 +1,15 @@
-resource "aws_lb" "projeto" {
+ resource "aws_lb" "projeto" {
   name            = "projeto"
   security_groups = [aws_security_group.alb.id]
   subnets         = module.vpc.public_subnets
 }
 
-resource "aws_lb" "projeto-back" {
+/* resource "aws_lb" "projeto-back" {
   name            = "projeto-back"
   security_groups = [aws_security_group.alb.id]
   subnets         = module.vpc.public_subnets
 }
-
+ */
 
 resource "aws_lb_target_group" "projeto" {
   name        = "projeto"
@@ -41,7 +41,7 @@ resource "aws_lb_target_group" "projeto-back" {
 }
 
 resource "aws_lb_listener" "projeto-back" {
-  load_balancer_arn = aws_lb.projeto-back.arn
+  load_balancer_arn = aws_lb.projeto.arn
   port              = 4010
   protocol          = "HTTP"
 
@@ -56,6 +56,7 @@ output "IP" {
   value = aws_lb.projeto.dns_name
 }
 
-output "IP-BACK" {
-  value = aws_lb.projeto-back.dns_name
-}
+# output "IP-BACK" {
+#   value = aws_lb.projeto-back.dns_name
+# }
+ 
