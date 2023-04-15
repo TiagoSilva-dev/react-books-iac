@@ -31,7 +31,7 @@ resource "aws_ecs_task_definition" "projeto" {
     [
       {
         "name"      = "frontend"
-        "image"     = "554559581131.dkr.ecr.us-west-2.amazonaws.com/producao:latest"
+        "image"     = "375994091048.dkr.ecr.us-east-1.amazonaws.com/producao:latest"
         "cpu"       = 256
         "memory"    = 512
         "essential" = true
@@ -42,7 +42,7 @@ resource "aws_ecs_task_definition" "projeto" {
           }
         ]
       }
-      ]
+    ]
   )
 
 }
@@ -58,7 +58,7 @@ resource "aws_ecs_task_definition" "projeto-back" {
     [
       {
         "name"      = "backend"
-        "image"     = "554559581131.dkr.ecr.us-west-2.amazonaws.com/producao-back:latest"
+        "image"     = "375994091048.dkr.ecr.us-east-1.amazonaws.com/producao-back:latest"
         "cpu"       = 256
         "memory"    = 512
         "essential" = true
@@ -69,7 +69,7 @@ resource "aws_ecs_task_definition" "projeto-back" {
           }
         ]
       }
-      ]
+    ]
   )
 
 }
